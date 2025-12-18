@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug LangJamSDL",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/windows-vcpkg-static/LangJamSDL.exe",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Build (vcpkg static)"
+    }
+  ]
+}

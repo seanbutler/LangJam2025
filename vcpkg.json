@@ -1,0 +1,7 @@
+{
+  "name": "langjam-sdl",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "sdl2"
+  ]
+}

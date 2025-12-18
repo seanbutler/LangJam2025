@@ -1,0 +1,12 @@
+# Build outputs
+/build/
+/out/
+
+# CMake artifacts
+CMakeCache.txt
+CMakeFiles/
+Testing/
+install/
+
+# VS Code
+.vscode/*.log
