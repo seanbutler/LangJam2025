@@ -2,8 +2,6 @@
 #include "bytecode_builder.h"
 #include <cstdio>
 
-
-
 using namespace vm32;
 
 int main() {

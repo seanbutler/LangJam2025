@@ -1,4 +1,4 @@
-# LangJam SDL + VM (CMake)
+# LangJam SDL + VM via CMake
 
 A minimal C/C++ SDL2 app scaffolded with CMake + vcpkg manifest mode, plus a small 32-bit cell-based VM that can be linked as a library.
 

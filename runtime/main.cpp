@@ -8,6 +8,9 @@
 
 int main(int argc, char* argv[]) {
 
+    std::printf("Starting runtime.exe\n");
+
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -15,6 +18,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    std::printf("Hello SDL\n");
+
+    
     SDL_Window* window = SDL_CreateWindow(
         "LangJam SDL", 
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
