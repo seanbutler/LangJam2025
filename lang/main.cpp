@@ -6,7 +6,7 @@
 
 int main(int argc, char** argv) {
 
-        std::printf("Starting lang.exe\n");
+    std::printf("Starting lang.exe\n");
 
     if ( argc > 1 ) {
 

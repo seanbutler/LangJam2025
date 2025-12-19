@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <cstdio>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <cstdint>
@@ -8,7 +9,7 @@
 
 int main(int argc, char* argv[]) {
 
-    std::printf("Starting runtime.exe\n");
+    std::cout << "runtime " << std::endl;
 
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
