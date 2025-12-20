@@ -59,7 +59,10 @@ namespace mylang
         SYM_BEGIN_BLOCK,
         SYM_END_BLOCK,
         SYM_LEFT_PAREN,
-        SYM_RIGHT_PAREN
+        SYM_RIGHT_PAREN,
+
+        SYM_COMMA
+
     };
 
     inline constexpr std::array<std::string_view, 9> keyword_strings = {
@@ -76,6 +79,7 @@ namespace mylang
 
     struct Token
     {
+            
         mylang::TypeIDs type_id;
         mylang::TokenIDs token_id;
         std::string token;

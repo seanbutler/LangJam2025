@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
 
         // ELSE:
         const u32 ELSE = static_cast<u32>(bc.pc());
-        bc.pushi(static_cast<i32>(0xFF112244u));
+        bc.pushi(static_cast<i32>(0xFFFF2244u));
         bc.load(ADDR);
         bc.store_ind();
 

@@ -37,7 +37,11 @@ public:
                 continue;
             }
 
-            if (accept_keyword() || accept_digraph() || accept_symbol() || accept_identifier() || accept_integer())
+            if (accept_keyword() 
+                || accept_digraph() 
+                || accept_symbol() 
+                || accept_identifier() 
+                || accept_integer())
             {
                 continue;
             }
@@ -52,7 +56,19 @@ public:
     {
         for (const auto& tok : tokens_)
         {
-            os << tok.compilation_unit << ":" << tok.position << " " << tok.token << "\n";
+            os << tok.compilation_unit << ":" << tok.position 
+                << " " << mylang::type_strings[tok.type_id];
+                
+            if (tok.type_id == mylang::TypeIDs::KEYWORD) 
+            {
+                os << " " << mylang::keyword_strings[tok.token_id-1]; 
+            }
+            else
+            {
+                os << " " << static_cast<uint32_t>(tok.token_id);
+            }
+
+            os << " \"" << tok.token << "\"\n";
         }
     }
 
@@ -125,6 +141,11 @@ private:
         const char c = source_[position_];
         switch (c)
         {
+        case ',':
+            tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_COMMA, ",", position_, compilation_unit_});
+            ++position_;
+            return true;
+        
         case '+':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_ADD, "+", position_, compilation_unit_});
             ++position_;
