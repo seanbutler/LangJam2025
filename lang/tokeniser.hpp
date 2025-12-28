@@ -56,8 +56,7 @@ public:
     {
         for (const auto& tok : tokens_)
         {
-            os << tok.compilation_unit << ":" << tok.position 
-                << " " << mylang::type_strings[tok.type_id];
+            os << tok.compilation_unit << ":" << tok.position << " " << mylang::type_strings[tok.type_id];
                 
             if (tok.type_id == mylang::TypeIDs::KEYWORD) 
             {
@@ -70,6 +69,8 @@ public:
 
             os << " \"" << tok.token << "\"\n";
         }
+
+        os << "\n";
     }
 
     const std::vector<mylang::Token>& tokens() const { return tokens_; }
@@ -83,7 +84,7 @@ private:
             const size_t len = keyword.size();
             if (position_ + len <= source_.size() && std::string_view(source_).substr(position_, len) == keyword)
             {
-                const auto token_id = static_cast<mylang::TokenIDs>(mylang::KEYWORD_LET + n);
+                const auto token_id = static_cast<mylang::TokenIDs>(mylang::KEYWORD_DECL + n);
                 tokens_.push_back(mylang::Token{mylang::TypeIDs::KEYWORD, token_id, std::string(keyword), position_, compilation_unit_});
                 position_ += len;
                 return true;

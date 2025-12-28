@@ -1,12 +1,12 @@
+let apple
+let banana
 
-let a := 100
-let b := 42
+apple := 17
+banana := 42
 
-func add_func_name ( ident1, ident2 ) 
+func add_three ( id1, id2, id3 )
 {
-    return ident1 + ident2 + globalb
+    return id1 + id2 + id3
 }
 
-
-output add_func_name(1, 2)
-
+output add_func_name ( 1, 2 )

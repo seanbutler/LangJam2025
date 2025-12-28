@@ -31,7 +31,7 @@ namespace mylang
     {
         TOK_UNKNOWN = 0,
 
-        KEYWORD_LET = 1,
+        KEYWORD_DECL = 1,
         KEYWORD_IF,
         KEYWORD_ELSE,
         KEYWORD_FUNC,
@@ -79,7 +79,6 @@ namespace mylang
 
     struct Token
     {
-            
         mylang::TypeIDs type_id;
         mylang::TokenIDs token_id;
         std::string token;

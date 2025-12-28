@@ -17,6 +17,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add source files
 
 # Only main.cpp is a source file, headers are included automatically
-add_executable(lang main.cpp)
+add_executable(lang main.cpp parser.cpp)
 
 target_include_directories(lang PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
