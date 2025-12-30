@@ -92,6 +92,21 @@ namespace mylang {
                 ParseCondition(parent);
             break;
 
+            case mylang::TokenIDs::KEYWORD_LOOP:
+                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_LOOP" << std::endl;
+                ParseLoop(parent);
+            break;
+
+            case mylang::TokenIDs::KEYWORD_EXITLOOP:
+                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_EXITLOOP" << std::endl;
+                ParseExitLoop(parent);
+            break;
+
+            case mylang::TokenIDs::KEYWORD_RETURN:
+                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_RETURN" << std::endl;
+                // ParseReturn(parent);
+            break;
+
             default:
                 std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token '" << tokenItor->token << "' in module" << std::endl;
         }    
@@ -313,6 +328,54 @@ namespace mylang {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"}\" to end Conditional Body" << std::endl;
         }
     }
+
+
+
+    void Parser::ParseLoop(ASTNode* parent) 
+    {
+        std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseLoop()" << std::endl;
+
+        if ( tokenItor->token_id != mylang::TokenIDs::KEYWORD_LOOP) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected 'loop' keyword to start loop" << std::endl;
+        }
+
+        ++tokenItor;
+
+
+        LoopASTNode* loopNode = new LoopASTNode();
+        parent->children.push_back(loopNode);
+
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_BEGIN_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Conditional Body" << std::endl;
+        }
+        ++tokenItor;        // Skip the '{'
+
+        ParseScope(loopNode);
+        
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"}\" to end Conditional Body" << std::endl;
+        }
+    }
+
+
+
+    void Parser::ParseExitLoop(ASTNode* parent) 
+    {
+        std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseExitLoop()" << std::endl;
+
+        ExitLoopASTNode* exitLoopNode = new ExitLoopASTNode();
+        parent->children.push_back(exitLoopNode);
+
+        ++tokenItor;
+    }
+
+
+
+
 
 
     void Parser::ParseAssignment(ASTNode* parent) 

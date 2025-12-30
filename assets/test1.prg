@@ -1,4 +1,3 @@
-
 let apple
 let banana
 
@@ -19,7 +18,13 @@ func do_eleven ( hehe )
     carrot := 11
 }
 
-if ( carrot ) 
-{
-    carrot := 0
+
+loop {
+    carrot := 100
+
+    if ( 11 )
+    {
+        exitloop
+    }
 }
+

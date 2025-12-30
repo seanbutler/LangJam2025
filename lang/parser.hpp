@@ -26,6 +26,9 @@ namespace mylang {
             void ParseKeywordStatement(ASTNode * parent);
             void ParseScope(ASTNode * parent);
             void ParseExpression(ASTNode * parent);
+            void ParseLoop(ASTNode* parent);
+            void ParseExitLoop(ASTNode* parent);
+
 
 
             IdentifierASTNode * ParseIdentifier(); 

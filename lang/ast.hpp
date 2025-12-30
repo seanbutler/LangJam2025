@@ -27,9 +27,9 @@ public:
             << id << " [" 
             << " label = \"" 
             << tag << "\n" 
-            << type << "\n"
+            // << type << "\n"
             ;
-
+ 
         if (value == ">")  { outStream << "\\>"; }
         else if (value == "<")  { outStream << "\\<"; }
         else if (value == ">=") { outStream << "\\>="; }
@@ -194,6 +194,55 @@ public:
         }
     }
 };
+
+
+// ------------------------------- Loop AST Class --------------------------------
+
+
+class LoopASTNode : public ASTNode {
+public:
+    LoopASTNode()
+        : ASTNode( global_id++, "LOOP", "Loop", "Loop" ) 
+        {
+
+        }
+
+
+    virtual ~LoopASTNode() override = default;
+
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "Loop AST Node\n";
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+};
+
+
+// ------------------------------- ExitLoop AST Class --------------------------------
+
+
+class ExitLoopASTNode : public ASTNode {
+public:
+    ExitLoopASTNode()
+        : ASTNode( global_id++, "EXIT", "ExitLoop", "ExitLoop" ) 
+        {
+
+        }
+
+
+    virtual ~ExitLoopASTNode() override = default;
+
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "ExitLoop AST Node\n";
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+};
+
 
 
 // ------------------------------- Assignment Statement AST Class --------------------------------

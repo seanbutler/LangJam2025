@@ -37,7 +37,7 @@ namespace mylang
         KEYWORD_FUNC,
         KEYWORD_RETURN,
         KEYWORD_LOOP,
-        KEYWORD_ENDLOOP,
+        KEYWORD_EXITLOOP,
         KEYWORD_INPUT,
         KEYWORD_OUTPUT,
 
@@ -73,7 +73,7 @@ namespace mylang
         "func",
         "return",
         "loop",
-        "endloop",
+        "exit",
         "read",
         "write",
     };
