@@ -37,6 +37,7 @@ namespace mylang
         KEYWORD_FUNC,
         KEYWORD_RETURN,
         KEYWORD_LOOP,
+        KEYWORD_ENDLOOP,
         KEYWORD_INPUT,
         KEYWORD_OUTPUT,
 

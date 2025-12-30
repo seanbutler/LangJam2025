@@ -172,6 +172,29 @@ public:
 };
 
 
+// ------------------------------- Conditional AST Class --------------------------------
+
+
+class ConditionalASTNode : public ASTNode {
+public:
+    ConditionalASTNode()
+        : ASTNode( global_id++, "COND", "Conditional", "Conditional" ) 
+        {
+
+        }
+
+
+    virtual ~ConditionalASTNode() override = default;
+
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "Conditional AST Node\n";
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+};
+
 
 // ------------------------------- Assignment Statement AST Class --------------------------------
 

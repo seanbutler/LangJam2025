@@ -87,6 +87,11 @@ namespace mylang {
                 ParseFunction(parent);
             break;
 
+            case mylang::TokenIDs::KEYWORD_IF:
+                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_IF" << std::endl;
+                ParseCondition(parent);
+            break;
+
             default:
                 std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token '" << tokenItor->token << "' in module" << std::endl;
         }    
@@ -159,7 +164,7 @@ namespace mylang {
         parent->children.emplace_back(exprNode);
 
         // WORKING HERE
-        // FOR NOW AN EXPRESSIO IS JUST AN INTEGER LITERAL
+        // FOR NOW AN EXPRESSION IS JUST AN INTEGER LITERAL
 
         if (tokenItor->type_id != mylang::TypeIDs::INTEGER) 
         {
@@ -259,6 +264,53 @@ namespace mylang {
         if (tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK) 
         {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"}\" to end Function Body" << std::endl;
+        }
+    }
+
+
+    void Parser::ParseCondition(ASTNode* parent) 
+    {
+        std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseCondition()" << std::endl;
+
+        if ( tokenItor->token_id != mylang::TokenIDs::KEYWORD_IF) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected 'if' keyword to start condition" << std::endl;
+        }
+
+        ++tokenItor;
+
+        ConditionalASTNode* condNode = new ConditionalASTNode();
+        parent->children.push_back(condNode);
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_LEFT_PAREN) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"(\" after Conditional Keyword" << std::endl;
+        }
+        ++tokenItor;
+
+
+        // Parse the condition expression
+        ParseExpression(condNode);
+
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_RIGHT_PAREN) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \")\" after Conditional Expression" << std::endl;
+        }
+        ++tokenItor;
+
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_BEGIN_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Conditional Body" << std::endl;
+        }
+        ++tokenItor;        // Skip the '{'
+
+        ParseScope(condNode);
+        
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"}\" to end Conditional Body" << std::endl;
         }
     }
 
