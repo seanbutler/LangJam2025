@@ -16,23 +16,23 @@ namespace mylang {
 
             ModuleASTNode * ParseModule();
 
-            void ParseStatement(ModuleASTNode* parent);
-            void ParseDeclaration(ModuleASTNode* parent); 
-            void ParseFunction(ModuleASTNode* parent);
+            void ParseStatement(ASTNode * parent);
+            void ParseDeclaration(ASTNode * parent); 
+            void ParseFunction(ASTNode * parent);
 
-            void ParseAssignmentStatement(ModuleASTNode* parent);
-            void ParseKeywordStatement(ModuleASTNode* moduleNode);
+            void ParseAssignmentStatement(ASTNode * parent);
+            void ParseKeywordStatement(ASTNode * parent);
+            void ParseScope(ASTNode * parent);
+            void ParseExpression(ASTNode * parent);
 
+            void ParseAssignment(ASTNode* parent); 
 
-            ScopeASTNode* ParseScope();
-            AssignmentASTNode * ParseAssignment(ModuleASTNode* parent);
             IdentifierASTNode * ParseIdentifier(); 
-            ExpressionASTNode * ParseExpression(); 
 
         private:        
             std::vector<Token> tokens_;
             std::vector<Token>::iterator tokenItor;
-            std::shared_ptr<AST> abstractSyntaxTree;
+            std::shared_ptr<ASTNode> abstractSyntaxTree;
             std::string compilation_unit_;
         };
 }

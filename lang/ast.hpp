@@ -8,9 +8,9 @@
 
 static uint32_t global_id=0;
 
-class AST {
+class ASTNode {
 public:
-    AST( uint32_t id = 0,
+    ASTNode( uint32_t id = 0,
         const std::string& tag = "AST",
         const std::string& type = "Type",
         const std::string& value = "Value" )
@@ -18,7 +18,7 @@ public:
     {
     }
 
-    virtual ~AST() = default;
+    virtual ~ASTNode() = default;
     virtual void print(int indent = 0) const = 0;
 
     void Diagram(std::ofstream & outStream)
@@ -53,17 +53,17 @@ public:
     std::string type;
     std::string value;
 
-    std::vector<AST*> children;
+    std::vector<ASTNode*> children;
 };
 
 
 // ------------------------------- Module AST Class --------------------------------
 
 
-class ModuleASTNode : public AST {
+class ModuleASTNode : public ASTNode {
 public:
     ModuleASTNode(std::string compilation_unit) 
-    : AST( global_id++, "MDL",  "Module", compilation_unit ) 
+    : ASTNode( global_id++, "MDL",  "Module", compilation_unit ) 
     {
     }
 
@@ -81,10 +81,10 @@ public:
 // ------------------------------- Scope AST Class --------------------------------
 
 
-class ScopeASTNode : public AST {
+class ScopeASTNode : public ASTNode {
 public:
     ScopeASTNode() 
-    : AST( global_id++, "SCP",  "Scope", "Scope" ) 
+    : ASTNode( global_id++, "SCP",  "Scope", "Scope" ) 
     {
     }
 
@@ -103,10 +103,10 @@ public:
 // ------------------------------- Keyword AST Class --------------------------------
 
 
-class KeywordStatementASTNode : public AST {
+class KeywordStatementASTNode : public ASTNode {
 public:
     KeywordStatementASTNode()
-        : AST( global_id++, "KWD", "KeywordStatement", "KeywordStatement" ) 
+        : ASTNode( global_id++, "KWD", "KeywordStatement", "KeywordStatement" ) 
         {
 
         }
@@ -126,10 +126,10 @@ public:
 // ------------------------------- Declaration AST Class --------------------------------
 
 
-class DeclarationASTNode : public AST {
+class DeclarationASTNode : public ASTNode {
 public:
     DeclarationASTNode()
-        : AST( global_id++, "DEC", "Declaration", "Declaration" ) 
+        : ASTNode( global_id++, "DEC", "Declaration", "Declaration" ) 
         {
 
         }
@@ -151,16 +151,13 @@ public:
 // ------------------------------- Declaration AST Class --------------------------------
 
 
-class FunctionASTNode : public AST {
+class FunctionASTNode : public ASTNode {
 public:
     FunctionASTNode()
-        : AST( global_id++, "FUN", "Function", "Function" ) 
+        : ASTNode( global_id++, "FUN", "Function", "Function" ) 
         {
 
         }
-
-
-
 
 
     virtual ~FunctionASTNode() override = default;
@@ -179,10 +176,10 @@ public:
 // ------------------------------- Assignment Statement AST Class --------------------------------
 
 
-class AssignmentStatementASTNode : public AST {
+class AssignmentStatementASTNode : public ASTNode {
 public:
     AssignmentStatementASTNode()
-        : AST( global_id++, "ASST", "AssignmentStatement", "AssignmentStatement" ) 
+        : ASTNode( global_id++, "ASST", "AssignmentStatement", "AssignmentStatement" ) 
         {
 
         }
@@ -203,10 +200,10 @@ public:
 // ------------------------------- Assignment AST Class --------------------------------
 
 
-class AssignmentASTNode : public AST {
+class AssignmentASTNode : public ASTNode {
 public:
     AssignmentASTNode()
-            : AST( global_id++, "ASS", "Assignment", "Assignment" ) 
+            : ASTNode( global_id++, "ASS", "Assignment", "Assignment" ) 
         {
 
         }
@@ -227,10 +224,10 @@ public:
 // ------------------------------- Expression AST Class --------------------------------
 
 
-class ExpressionASTNode : public AST {
+class ExpressionASTNode : public ASTNode {
 public:
     ExpressionASTNode()
-        : AST( global_id++, "EXP", "Expression", "Expression" ) 
+        : ASTNode( global_id++, "EXP", "Expression", "Expression" ) 
         {
 
         }
@@ -251,10 +248,10 @@ public:
 
 // ------------------------------- Integer AST Class --------------------------------
 
-class ValueASTNode : public AST {
+class ValueASTNode : public ASTNode {
 public:
     ValueASTNode(std::string type, std::string value)
-        : AST( global_id++, "VAL", type,  value ) 
+        : ASTNode( global_id++, "VAL", type,  value ) 
         {
 
         }
@@ -274,10 +271,10 @@ public:
 
 // ------------------------------- Identifier AST Class --------------------------------
 
-class IdentifierASTNode : public AST {
+class IdentifierASTNode : public ASTNode {
 public:
     IdentifierASTNode(const std::string& name)
-            : AST( global_id++, "ID", "Identifier",  name) 
+            : ASTNode( global_id++, "ID", "Identifier",  name) 
         {
 
         }
@@ -300,10 +297,10 @@ public:
 
 // ------------------------------- Parameter List AST Class --------------------------------
 
-class ParameterListASTNode : public AST {
+class ParameterListASTNode : public ASTNode {
 public:
     ParameterListASTNode()
-            : AST( global_id++, "PLST", "ParameterList", "ParameterList" ) 
+            : ASTNode( global_id++, "PLST", "ParameterList", "ParameterList" ) 
         {
 
         }

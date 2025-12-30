@@ -33,21 +33,7 @@ namespace mylang {
     }
 
 
-    ScopeASTNode* Parser::ParseScope() 
-    {
-        ScopeASTNode* scopeNode = new ScopeASTNode();
-
-        while (tokenItor != tokens_.end() 
-                && tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK ) 
-        {
-            ParseStatement(scopeNode);
-        }
-
-        return scopeNode;
-    }
-
-
-    void Parser::ParseStatement(ModuleASTNode* parent) 
+    void Parser::ParseStatement(ASTNode* parent) 
     {
         switch(tokenItor->type_id) 
         {
@@ -59,6 +45,13 @@ namespace mylang {
                 ParseAssignmentStatement(parent);
                 break;
 
+            case mylang::TypeIDs::SYMBOL:
+                if ( tokenItor->token_id == mylang::TokenIDs::SYM_BEGIN_BLOCK )
+                {
+                    ParseScope(parent);
+                }
+                break;
+
             default:
                 std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token type in module token = \'" << tokenItor->token << "\'" << std::endl;
                 tokenItor++;
@@ -66,18 +59,32 @@ namespace mylang {
     }
 
 
-    void Parser::ParseKeywordStatement(ModuleASTNode* moduleNode)
+    void Parser::ParseScope(ASTNode* parent) 
+    {
+        ScopeASTNode* scopeNode = new ScopeASTNode();
+        parent->children.push_back(scopeNode);
+        
+        while (tokenItor != tokens_.end() 
+                && tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK ) 
+        {
+            ParseStatement(scopeNode);
+        }
+
+    }
+
+
+    void Parser::ParseKeywordStatement(ASTNode* parent)
     {
         switch (tokenItor->token_id) 
         {
             case mylang::TokenIDs::KEYWORD_DECL:
                 std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_DECL" << std::endl;                    
-                ParseDeclaration(moduleNode);
+                ParseDeclaration(parent);
             break;
 
             case mylang::TokenIDs::KEYWORD_FUNC:
                 std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_FUNC" << std::endl;
-                ParseFunction(moduleNode);
+                ParseFunction(parent);
             break;
 
             default:
@@ -88,7 +95,7 @@ namespace mylang {
     }
 
 
-    void Parser::ParseAssignmentStatement(ModuleASTNode* parent) 
+    void Parser::ParseAssignmentStatement(ASTNode* parent) 
     {
         std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseAssignmentStatement()" << std::endl;
 
@@ -117,12 +124,11 @@ namespace mylang {
 
         ++tokenItor;
 
-        ExpressionASTNode* exprNode = ParseExpression();
-        assNode->children.emplace_back(exprNode);
+        ParseExpression(assNode);
     }    
 
 
-    void Parser::ParseDeclaration(ModuleASTNode* parent) 
+    void Parser::ParseDeclaration(ASTNode* parent) 
     {
         std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseDeclaration()" << std::endl;
 
@@ -145,11 +151,12 @@ namespace mylang {
     }
 
     
-    ExpressionASTNode * Parser::ParseExpression() 
+    void Parser::ParseExpression(ASTNode* parent) 
     {
         std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseExpression()" << std::endl;
 
         auto exprNode = new ExpressionASTNode();
+        parent->children.emplace_back(exprNode);
 
         // WORKING HERE
         // FOR NOW AN EXPRESSIO IS JUST AN INTEGER LITERAL
@@ -157,7 +164,6 @@ namespace mylang {
         if (tokenItor->type_id != mylang::TypeIDs::INTEGER) 
         {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected integer literal in expression" << std::endl;
-            return nullptr;
         }
 
         ValueASTNode* intNode = new ValueASTNode("Integer", tokenItor->token.c_str());
@@ -166,12 +172,10 @@ namespace mylang {
         std::cout << __FILE__ << ":" << __LINE__ << " Parsed integer literal: \'" << tokenItor->token.c_str() << "\' at " << exprNode->children.back() << std::endl;
 
         ++tokenItor;
-        
-        return exprNode;
     }
 
 
-    void Parser::ParseFunction(ModuleASTNode* parent) 
+    void Parser::ParseFunction(ASTNode* parent) 
     {
         std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseFunction()" << std::endl;
 
@@ -248,36 +252,19 @@ namespace mylang {
         {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Function Body" << std::endl;
         }
+        ++tokenItor;        // Skip the '{'
 
-
-
-        // StatementListASTNode * statementListNode = new StatementListASTNode ();
-        // uint8_t statements = 0;
-
-        while ( tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK )
-        {
-
-            // ParseStatement(funDeclNode);
-
-            ++tokenItor;        // Skip tokens in function body
-        }
-
+        ParseScope(funDeclNode);
         
-        ++tokenItor;        // Skip the '}'
-
         if (tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK) 
         {
-            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Function Body" << std::endl;
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"}\" to end Function Body" << std::endl;
         }
     }
 
 
-
-
-    AssignmentASTNode * Parser::ParseAssignment(ModuleASTNode* parent) 
+    void Parser::ParseAssignment(ASTNode* parent) 
     {
-        return nullptr;
-
         std::cout << "Parser::ParseAssignment()" << std::endl;
 
         AssignmentASTNode* assNode = new AssignmentASTNode();
@@ -287,7 +274,6 @@ namespace mylang {
         if (tokenItor->type_id != mylang::TypeIDs::IDENTIFIER) 
         {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected identifier after 'let'" << std::endl;
-            return nullptr;
         }
 
         IdentifierASTNode* identifierNode = new IdentifierASTNode(  tokenItor->token.c_str());
@@ -300,7 +286,6 @@ namespace mylang {
         if (tokenItor->token_id != mylang::TokenIDs::DIGRAPH_ASSIGN) 
         {
             std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected Assignment ':=' after identifier" << std::endl;
-            return nullptr;
         }
     }    
 
