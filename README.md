@@ -5,7 +5,7 @@
 LangJam2025 is a modular C++ project for experimenting with language and VM design, rapid prototyping, and cross-platform SDL2 graphics.
 
 
-![AST IMAGE](./assets/ast_01_image.png)
+![AST IMAGE](./assets/ast_02_image.png)
 Currently has a VM and a parser which generates an AST.
 
 
