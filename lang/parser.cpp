@@ -26,28 +26,43 @@ namespace mylang {
 
         while (tokenItor != tokens_.end()) 
         {
-            switch(tokenItor->type_id) 
-            {
-                case mylang::TypeIDs::KEYWORD:
-                    ParseKeywordStatement(moduleNode);
-                    break;
-
-                case mylang::TypeIDs::IDENTIFIER:
-                    ParseAssignmentStatement(moduleNode);
-                    break;
-
-                // case mylang::TypeIDs::FNAME:
-                //     ParseFunctionStatement(moduleNode);
-                //     break;
-
-                default:
-                    std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token type in module token = \'" << tokenItor->token << "\'" << std::endl;
-                    tokenItor++;
-                    // return nullptr;
-            }
+            ParseStatement(moduleNode);
         }
 
         return moduleNode;
+    }
+
+
+    ScopeASTNode* Parser::ParseScope() 
+    {
+        ScopeASTNode* scopeNode = new ScopeASTNode();
+
+        while (tokenItor != tokens_.end() 
+                && tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK ) 
+        {
+            ParseStatement(scopeNode);
+        }
+
+        return scopeNode;
+    }
+
+
+    void Parser::ParseStatement(ModuleASTNode* parent) 
+    {
+        switch(tokenItor->type_id) 
+        {
+            case mylang::TypeIDs::KEYWORD:
+                ParseKeywordStatement(parent);
+                break;
+
+            case mylang::TypeIDs::IDENTIFIER:
+                ParseAssignmentStatement(parent);
+                break;
+
+            default:
+                std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token type in module token = \'" << tokenItor->token << "\'" << std::endl;
+                tokenItor++;
+        }
     }
 
 
@@ -104,7 +119,6 @@ namespace mylang {
 
         ExpressionASTNode* exprNode = ParseExpression();
         assNode->children.emplace_back(exprNode);
-
     }    
 
 
@@ -146,7 +160,7 @@ namespace mylang {
             return nullptr;
         }
 
-        IntegerASTNode* intNode = new IntegerASTNode(tokenItor->token.c_str());
+        ValueASTNode* intNode = new ValueASTNode("Integer", tokenItor->token.c_str());
         exprNode->children.emplace_back(intNode);
 
         std::cout << __FILE__ << ":" << __LINE__ << " Parsed integer literal: \'" << tokenItor->token.c_str() << "\' at " << exprNode->children.back() << std::endl;
@@ -159,46 +173,105 @@ namespace mylang {
 
     void Parser::ParseFunction(ModuleASTNode* parent) 
     {
-        return;
-        
         std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseFunction()" << std::endl;
 
-        FunctionASTNode* declNode = new FunctionASTNode();
-        parent->children.push_back(declNode);
+        if ( tokenItor->token_id != mylang::TokenIDs::KEYWORD_FUNC) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected 'func' keyword to start function declaration" << std::endl;
+            return;
+        }
 
         ++tokenItor;
 
         // Expect an identifier
         if (tokenItor->type_id != mylang::TypeIDs::IDENTIFIER) 
         {
-            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected identifier after 'func'" << std::endl;
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected identifier after 'func' got \"" << tokenItor->token << "\"" << std::endl;
             return;
         }
 
+        FunctionASTNode* funDeclNode = new FunctionASTNode();
+        parent->children.push_back(funDeclNode);
+
         IdentifierASTNode* identifierNode = new IdentifierASTNode(tokenItor->token.c_str());
-        declNode->children.emplace_back(identifierNode);
+        funDeclNode->children.emplace_back(identifierNode);
 
-        std::cout << __FILE__ << ":" << __LINE__ << " Parsed identifier: \'" << tokenItor->token.c_str() << "\' at " << declNode->children.back() << std::endl;
+        std::cout << __FILE__ << ":" << __LINE__ << " Parsed identifier: \'" << tokenItor->token.c_str() << "\' at " << funDeclNode->children.back() << std::endl;
+        ++tokenItor;
 
-        if (tokenItor->type_id != mylang::TypeIDs::SYMBOL) 
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_LEFT_PAREN) 
         {
-            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"(\" after Function Name" << std::endl;
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"(\" after Function Identifier" << std::endl;
         }
 
         ++tokenItor;
 
-        // Expect Identifier List
+        ParameterListASTNode * paramListNode = new ParameterListASTNode ();
+        uint8_t params = 0;
 
-        if (tokenItor->type_id != mylang::TypeIDs::SYMBOL) 
+        while ( tokenItor->token_id != mylang::TokenIDs::SYM_RIGHT_PAREN )
         {
-            if (tokenItor->token != ")" ) 
+            // Expect an identifier
+            if (tokenItor->type_id != mylang::TypeIDs::IDENTIFIER) 
             {
-                std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \")\" after Parameter Identifier List" << std::endl;
+                std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected Identifier in Parameter List got \"" << tokenItor->token << "\"" << std::endl;
+                return;
+            }
+
+            IdentifierASTNode* paramIdentifierNode = new IdentifierASTNode(tokenItor->token.c_str());
+            paramListNode->children.emplace_back(paramIdentifierNode);
+            params++;  
+
+            std::cout << __FILE__ << ":" << __LINE__ << " Parsed Parameter identifier: \'" << tokenItor->token.c_str() << "\' at " << funDeclNode->children.back() << std::endl;
+
+            ++tokenItor;
+
+            if ( tokenItor->token_id == mylang::TokenIDs::SYM_COMMA ) 
+            {
+                ++tokenItor;    // skip the comma
             }
         }
-        ++tokenItor;    // skip the begin block
+
+        if (params>0) 
+        {
+            funDeclNode->children.push_back(paramListNode);
+        }
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_RIGHT_PAREN) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \")\" after Parameter Identifier List" << std::endl;
+        }
+
+        ++tokenItor;        // Skip the ')'
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_BEGIN_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Function Body" << std::endl;
+        }
+
+
+
+        // StatementListASTNode * statementListNode = new StatementListASTNode ();
+        // uint8_t statements = 0;
+
+        while ( tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK )
+        {
+
+            // ParseStatement(funDeclNode);
+
+            ++tokenItor;        // Skip tokens in function body
+        }
+
         
+        ++tokenItor;        // Skip the '}'
+
+        if (tokenItor->token_id != mylang::TokenIDs::SYM_END_BLOCK) 
+        {
+            std::cout << __FILE__ << ":" << __LINE__ << " Error: Expected \"{\" to begin Function Body" << std::endl;
+        }
     }
+
+
 
 
     AssignmentASTNode * Parser::ParseAssignment(ModuleASTNode* parent) 

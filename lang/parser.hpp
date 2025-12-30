@@ -16,14 +16,16 @@ namespace mylang {
 
             ModuleASTNode * ParseModule();
 
+            void ParseStatement(ModuleASTNode* parent);
             void ParseDeclaration(ModuleASTNode* parent); 
             void ParseFunction(ModuleASTNode* parent);
 
             void ParseAssignmentStatement(ModuleASTNode* parent);
             void ParseKeywordStatement(ModuleASTNode* moduleNode);
 
-            AssignmentASTNode * ParseAssignment(ModuleASTNode* parent);
 
+            ScopeASTNode* ParseScope();
+            AssignmentASTNode * ParseAssignment(ModuleASTNode* parent);
             IdentifierASTNode * ParseIdentifier(); 
             ExpressionASTNode * ParseExpression(); 
 

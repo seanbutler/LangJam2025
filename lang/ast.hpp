@@ -5,8 +5,8 @@
 #include <vector>
 
 // ------------------------------- AST Base Class --------------------------------
-static uint32_t global_id=0;
 
+static uint32_t global_id=0;
 
 class AST {
 public:
@@ -23,18 +23,21 @@ public:
 
     void Diagram(std::ofstream & outStream)
     {
-        outStream << "node" << id << " [" 
-                // << " uuid = \"" << id << "\""
-                // << " shape = \"record\""
-                << " label = \"" << tag << "\n" << type << "\n";
+        outStream << "node" 
+            << id << " [" 
+            << " label = \"" 
+            << tag << "\n" 
+            << type << "\n"
+            ;
 
         if (value == ">")  { outStream << "\\>"; }
         else if (value == "<")  { outStream << "\\<"; }
         else if (value == ">=") { outStream << "\\>="; }
         else if (value == "<=") { outStream << "\\<="; }
         else { outStream << value; }
+        outStream << "\""; 
 
-        outStream << "\"" << " ];" << std::endl;
+        outStream << " ];" << std::endl;
 
         for(auto N : children) {
             if (N != nullptr) {
@@ -60,7 +63,7 @@ public:
 class ModuleASTNode : public AST {
 public:
     ModuleASTNode(std::string compilation_unit) 
-    : AST( global_id++, "MDL", compilation_unit, "Module" ) 
+    : AST( global_id++, "MDL",  "Module", compilation_unit ) 
     {
     }
 
@@ -69,6 +72,27 @@ public:
     void print(int indent = 0) const override {
         std::string indentation(indent, ' ');
         std::cout << indentation << "Module AST Node\n";
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+};
+
+// ------------------------------- Scope AST Class --------------------------------
+
+
+class ScopeASTNode : public AST {
+public:
+    ScopeASTNode() 
+    : AST( global_id++, "SCP",  "Scope", "Scope" ) 
+    {
+    }
+
+    virtual ~ScopeASTNode() override = default; 
+        
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "Scope AST Node\n";
         for (const auto& child : children) {
             child->print(indent + 2);
         }
@@ -227,19 +251,19 @@ public:
 
 // ------------------------------- Integer AST Class --------------------------------
 
-class IntegerASTNode : public AST {
+class ValueASTNode : public AST {
 public:
-    IntegerASTNode(std::string value)
-        : AST( global_id++, "INT", value, "Integer" ) 
+    ValueASTNode(std::string type, std::string value)
+        : AST( global_id++, "VAL", type,  value ) 
         {
 
         }
 
-    virtual ~IntegerASTNode() override = default;
+    virtual ~ValueASTNode() override = default;
 
     void print(int indent = 0) const override {
         std::string indentation(indent, ' ');
-        std::cout << indentation << "Integer AST Node\n";
+        std::cout << indentation << "Value AST Node\n";
 
         for (const auto& child : children) {
             child->print(indent + 2);
@@ -253,7 +277,7 @@ public:
 class IdentifierASTNode : public AST {
 public:
     IdentifierASTNode(const std::string& name)
-            : AST( global_id++, "ID", name, "Identifier" ) 
+            : AST( global_id++, "ID", "Identifier",  name) 
         {
 
         }
@@ -265,6 +289,30 @@ public:
         std::string indentation(indent, ' ');
         std::cout << indentation << "Identifier AST Node\n";
 
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }        
+    }
+
+};
+
+
+
+// ------------------------------- Parameter List AST Class --------------------------------
+
+class ParameterListASTNode : public AST {
+public:
+    ParameterListASTNode()
+            : AST( global_id++, "PLST", "ParameterList", "ParameterList" ) 
+        {
+
+        }
+
+    virtual ~ParameterListASTNode() override = default;
+
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "ParameterList AST Node\n";
         for (const auto& child : children) {
             child->print(indent + 2);
         }        

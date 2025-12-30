@@ -151,34 +151,42 @@ private:
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_ADD, "+", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '-':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_SUBTRACT, "-", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '*':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_MULTIPLY, "*", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '/':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_DIVIDE, "/", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '{':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_BEGIN_BLOCK, "{", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '}':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_END_BLOCK, "}", position_, compilation_unit_});
             ++position_;
             return true;
+
         case '(':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_LEFT_PAREN, "(", position_, compilation_unit_});
             ++position_;
             return true;
+
         case ')':
             tokens_.push_back(mylang::Token{mylang::TypeIDs::SYMBOL, mylang::TokenIDs::SYM_RIGHT_PAREN, ")", position_, compilation_unit_});
             ++position_;
             return true;
+            
         default:
             return false;
         }
