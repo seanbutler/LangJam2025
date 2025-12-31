@@ -13,13 +13,25 @@ public:
     ASTNode( uint32_t id = 0,
         const std::string& tag = "AST",
         const std::string& type = "Type",
-        const std::string& value = "Value" )
-    : id(global_id++), tag(tag), type(type), value(value)
+        const std::string& value = "Value",
+        const std::string& comment = "AST Node"
+    )
+    : id(global_id++), tag(tag), type(type), value(value), print_comment(comment)
     {
     }
 
     virtual ~ASTNode() = default;
-    virtual void print(int indent = 0) const = 0;
+
+    void print(int indent = 0) const 
+    {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << print_comment << std::endl;
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+
+
 
     void Diagram(std::ofstream & outStream)
     {
@@ -54,6 +66,8 @@ public:
     std::string value;
 
     std::vector<ASTNode*> children;
+    std::string print_comment;
+
 };
 
 
@@ -63,19 +77,11 @@ public:
 class ModuleASTNode : public ASTNode {
 public:
     ModuleASTNode(std::string compilation_unit) 
-    : ASTNode( global_id++, "MDL",  "Module", compilation_unit ) 
+    : ASTNode( global_id++, "MDL",  "Module", compilation_unit, "Module AST Node" )
     {
     }
 
     virtual ~ModuleASTNode() override = default;
-
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Module AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 // ------------------------------- Scope AST Class --------------------------------
@@ -84,19 +90,12 @@ public:
 class ScopeASTNode : public ASTNode {
 public:
     ScopeASTNode() 
-    : ASTNode( global_id++, "SCP",  "Scope", "Scope" ) 
+    : ASTNode( global_id++, "SCP",  "Scope", "Scope", "Scope AST Node" ) 
     {
     }
 
     virtual ~ScopeASTNode() override = default; 
         
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Scope AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -106,20 +105,13 @@ public:
 class KeywordStatementASTNode : public ASTNode {
 public:
     KeywordStatementASTNode()
-        : ASTNode( global_id++, "KWD", "KeywordStatement", "KeywordStatement" ) 
+        : ASTNode( global_id++, "KWD", "KeywordStatement", "KeywordStatement", "Keyword Statement AST Node")
         {
 
         }
 
     virtual ~KeywordStatementASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Keyword Statement AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -129,7 +121,7 @@ public:
 class DeclarationASTNode : public ASTNode {
 public:
     DeclarationASTNode()
-        : ASTNode( global_id++, "DEC", "Declaration", "Declaration" ) 
+        : ASTNode( global_id++, "DEC", "Declaration", "Declaration", "Declaration AST Node" ) 
         {
 
         }
@@ -138,13 +130,7 @@ public:
 
     virtual ~DeclarationASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Declaration AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
+
 };
 
 
@@ -154,7 +140,7 @@ public:
 class FunctionASTNode : public ASTNode {
 public:
     FunctionASTNode()
-        : ASTNode( global_id++, "FUN", "Function", "Function" ) 
+        : ASTNode( global_id++, "FUN", "Function", "Function", "Function AST Node" ) 
         {
 
         }
@@ -162,13 +148,6 @@ public:
 
     virtual ~FunctionASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Function AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -178,7 +157,7 @@ public:
 class ConditionalASTNode : public ASTNode {
 public:
     ConditionalASTNode()
-        : ASTNode( global_id++, "COND", "Conditional", "Conditional" ) 
+        : ASTNode( global_id++, "COND", "Conditional", "Conditional", "Conditional AST Node" ) 
         {
 
         }
@@ -186,13 +165,6 @@ public:
 
     virtual ~ConditionalASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Conditional AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -202,7 +174,7 @@ public:
 class LoopASTNode : public ASTNode {
 public:
     LoopASTNode()
-        : ASTNode( global_id++, "LOOP", "Loop", "Loop" ) 
+        : ASTNode( global_id++, "LOOP", "Loop", "Loop", "Loop AST Node" ) 
         {
 
         }
@@ -210,13 +182,7 @@ public:
 
     virtual ~LoopASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Loop AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
+
 };
 
 
@@ -226,7 +192,7 @@ public:
 class ExitLoopASTNode : public ASTNode {
 public:
     ExitLoopASTNode()
-        : ASTNode( global_id++, "EXIT", "ExitLoop", "ExitLoop" ) 
+        : ASTNode( global_id++, "EXIT", "ExitLoop", "ExitLoop", "ExitLoop AST Node" ) 
         {
 
         }
@@ -234,13 +200,6 @@ public:
 
     virtual ~ExitLoopASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "ExitLoop AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 // ------------------------------- Return AST Class --------------------------------
@@ -249,7 +208,7 @@ public:
 class ReturnASTNode : public ASTNode {
 public:
     ReturnASTNode()
-        : ASTNode( global_id++, "RET", "Return", "Return" ) 
+        : ASTNode( global_id++, "RET", "Return", "Return", "Return AST Node" ) 
         {
 
         }
@@ -257,13 +216,6 @@ public:
 
     virtual ~ReturnASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Return AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -273,7 +225,7 @@ public:
 class AssignmentStatementASTNode : public ASTNode {
 public:
     AssignmentStatementASTNode()
-        : ASTNode( global_id++, "ASST", "AssignmentStatement", "AssignmentStatement" ) 
+        : ASTNode( global_id++, "ASST", "AssignmentStatement", "AssignmentStatement", "Assignment Statement AST Node" ) 
         {
 
         }
@@ -281,13 +233,6 @@ public:
 
     virtual ~AssignmentStatementASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Assignment Statement AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -297,7 +242,7 @@ public:
 class AssignmentASTNode : public ASTNode {
 public:
     AssignmentASTNode()
-            : ASTNode( global_id++, "ASS", "Assignment", "Assignment" ) 
+            : ASTNode( global_id++, "ASS", "Assignment", "Assignment", "Assignment AST Node" ) 
         {
 
         }
@@ -305,13 +250,6 @@ public:
 
     virtual ~AssignmentASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Assignment AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }
-    }
 };
 
 
@@ -321,7 +259,7 @@ public:
 class ExpressionASTNode : public ASTNode {
 public:
     ExpressionASTNode()
-        : ASTNode( global_id++, "EXP", "Expression", "Expression" ) 
+        : ASTNode( global_id++, "EXP", "Expression", "Expression", "Expression AST Node" ) 
         {
 
         }
@@ -329,14 +267,6 @@ public:
 
     virtual ~ExpressionASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Expression AST Node\n";
-
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }        
-    }
 };
 
 
@@ -345,21 +275,13 @@ public:
 class ValueASTNode : public ASTNode {
 public:
     ValueASTNode(std::string type, std::string value)
-        : ASTNode( global_id++, "VAL", type,  value ) 
+        : ASTNode( global_id++, "VAL", type,  value, "Value AST Node" ) 
         {
 
         }
 
     virtual ~ValueASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Value AST Node\n";
-
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }        
-    }
 
 };
 
@@ -368,7 +290,7 @@ public:
 class IdentifierASTNode : public ASTNode {
 public:
     IdentifierASTNode(const std::string& name)
-            : ASTNode( global_id++, "ID", "Identifier",  name) 
+            : ASTNode( global_id++, "ID", "Identifier",  name, "Identifier AST Node" ) 
         {
 
         }
@@ -376,14 +298,6 @@ public:
 
     virtual ~IdentifierASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "Identifier AST Node\n";
-
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }        
-    }
 
 };
 
@@ -394,20 +308,13 @@ public:
 class ParameterListASTNode : public ASTNode {
 public:
     ParameterListASTNode()
-            : ASTNode( global_id++, "PLST", "ParameterList", "ParameterList" ) 
+            : ASTNode( global_id++, "PLST", "ParameterList", "ParameterList", "Parameter List AST Node" ) 
         {
 
         }
 
     virtual ~ParameterListASTNode() override = default;
 
-    void print(int indent = 0) const override {
-        std::string indentation(indent, ' ');
-        std::cout << indentation << "ParameterList AST Node\n";
-        for (const auto& child : children) {
-            child->print(indent + 2);
-        }        
-    }
 
 };
 
