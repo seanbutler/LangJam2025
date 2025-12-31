@@ -243,6 +243,28 @@ public:
     }
 };
 
+// ------------------------------- Return AST Class --------------------------------
+
+
+class ReturnASTNode : public ASTNode {
+public:
+    ReturnASTNode()
+        : ASTNode( global_id++, "RET", "Return", "Return" ) 
+        {
+
+        }
+
+
+    virtual ~ReturnASTNode() override = default;
+
+    void print(int indent = 0) const override {
+        std::string indentation(indent, ' ');
+        std::cout << indentation << "Return AST Node\n";
+        for (const auto& child : children) {
+            child->print(indent + 2);
+        }
+    }
+};
 
 
 // ------------------------------- Assignment Statement AST Class --------------------------------

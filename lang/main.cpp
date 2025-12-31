@@ -27,7 +27,6 @@ int main(int argc, char** argv) {
         ModuleASTNode * ast = nullptr;
         ast = parser.ParseModule();
         
-
         std::ofstream diagramFile("ast_diagram.gv");
         diagramFile << "digraph G {" <<  std::endl;
         diagramFile << "node [shape = rectangle];" << std::endl;
@@ -35,10 +34,7 @@ int main(int argc, char** argv) {
         diagramFile << "}" << std::endl;
         diagramFile.close();
 
-
         ast->print();
-
-
     }
 
     return 0;

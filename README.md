@@ -5,7 +5,7 @@
 LangJam2025 is a modular C++ project for experimenting with language and VM design, rapid prototyping, and cross-platform SDL2 graphics.
 
 
-![AST IMAGE](./assets/ast_02_image.png)
+![AST IMAGE](./assets/ast_03_image.png)
 Currently has a VM and a parser which generates an AST.
 
 
@@ -20,27 +20,38 @@ Currently has a VM and a parser which generates an AST.
 
 #### Stage 1
 
-Basic Lang no Scope All Vars Global
+Basic Lang no Parser Only
 
-- [+] AST
-- [+] Parser
-- [ ] Symbol Table
-- [ ] Code Generator V0.1
+- [-] AST
+- [-] Parser; Declarations, Assignments, Conditions, Blocks, Functions & Loops
 
 
 #### Stage 2
 
-Named Function Calls w+ parameters (Really more like subroutines)
+Extend Lang for Basic IO
 
-- [ ] Function Syntax
-- [ ] Subroutine Code Generator V0.2
+- [ ] Peek & Poke or Similar to Access memory Mapped Input and Output
+- [ ] Extend Memory Mapped IO to include text output to console somehow
+
+- [ ] Expressions
+
+
 
 #### Stage 3
 
+Simple Code Generation
+
+- [ ] Symbol Table
+- [ ] Code Generator; Declarations, Assignments, Conditions, Blocks, Functions & Loops
+- [ ] Code Generator; Subroutines, (Push Params, Push Ret Addr, Execute, Return)
+- [ ] Code Generator; Expressions, 
+
+
+#### Stage 4
+
 Hierarchical Scope for Variable Visability
 
-- [?] Nested Symbol Tables
-- [ ] Scope Related Parser
+- [ ] Nested Symbol Tables
 
 
 

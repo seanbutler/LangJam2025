@@ -19,8 +19,11 @@ namespace mylang {
             void ParseStatement(ASTNode * parent);
             void ParseDeclaration(ASTNode * parent); 
             void ParseAssignment(ASTNode* parent); 
-            void ParseFunction(ASTNode * parent);
             void ParseCondition(ASTNode* parent); 
+
+            void ParseFunction(ASTNode * parent);
+            void ParseReturn(ASTNode* parent);
+
 
             void ParseAssignmentStatement(ASTNode * parent);
             void ParseKeywordStatement(ASTNode * parent);
@@ -28,7 +31,6 @@ namespace mylang {
             void ParseExpression(ASTNode * parent);
             void ParseLoop(ASTNode* parent);
             void ParseExitLoop(ASTNode* parent);
-
 
 
             IdentifierASTNode * ParseIdentifier(); 

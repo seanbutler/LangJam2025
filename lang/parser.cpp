@@ -87,6 +87,11 @@ namespace mylang {
                 ParseFunction(parent);
             break;
 
+            case mylang::TokenIDs::KEYWORD_RETURN:
+                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_RETURN" << std::endl;
+                ParseReturn(parent);
+            break;
+
             case mylang::TokenIDs::KEYWORD_IF:
                 std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_IF" << std::endl;
                 ParseCondition(parent);
@@ -102,10 +107,6 @@ namespace mylang {
                 ParseExitLoop(parent);
             break;
 
-            case mylang::TokenIDs::KEYWORD_RETURN:
-                std::cout << __FILE__<<":" << __LINE__ << " Parser::ParseModule() TokenIDs::KEYWORD_RETURN" << std::endl;
-                // ParseReturn(parent);
-            break;
 
             default:
                 std::cout << __FILE__ << ":" << __LINE__ << " Error: Unexpected token '" << tokenItor->token << "' in module" << std::endl;
@@ -342,10 +343,8 @@ namespace mylang {
 
         ++tokenItor;
 
-
         LoopASTNode* loopNode = new LoopASTNode();
         parent->children.push_back(loopNode);
-
 
         if (tokenItor->token_id != mylang::TokenIDs::SYM_BEGIN_BLOCK) 
         {
@@ -374,8 +373,15 @@ namespace mylang {
     }
 
 
+    void Parser::ParseReturn(ASTNode* parent) 
+    {
+        std::cout << __FILE__ << ":" << __LINE__ << " Parser::ParseReturn()" << std::endl;
 
+        ReturnASTNode* retNode = new ReturnASTNode();
+        parent->children.push_back(retNode);
 
+        // ++tokenItor;
+    }
 
 
     void Parser::ParseAssignment(ASTNode* parent) 
