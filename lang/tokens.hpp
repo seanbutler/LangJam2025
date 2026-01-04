@@ -62,7 +62,8 @@ namespace mylang
         SYM_LEFT_PAREN,
         SYM_RIGHT_PAREN,
 
-        SYM_COMMA
+        SYM_COMMA,
+        SYM_HASH
 
     };
 
@@ -80,9 +81,11 @@ namespace mylang
 
     struct Token
     {
+
         mylang::TypeIDs type_id;
         mylang::TokenIDs token_id;
         std::string token;
+
         size_t position;
         std::string compilation_unit;
     };

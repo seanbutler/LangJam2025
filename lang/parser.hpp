@@ -24,14 +24,12 @@ namespace mylang {
             void ParseFunction(ASTNode * parent);
             void ParseReturn(ASTNode* parent);
 
-
             void ParseAssignmentStatement(ASTNode * parent);
             void ParseKeywordStatement(ASTNode * parent);
             void ParseScope(ASTNode * parent);
             void ParseExpression(ASTNode * parent);
             void ParseLoop(ASTNode* parent);
             void ParseExitLoop(ASTNode* parent);
-
 
             IdentifierASTNode * ParseIdentifier(); 
 

@@ -5,12 +5,11 @@
 #include <vector>
 #include <cstdint>
 #include "vm.h"
-#include "bytecode_builder.h"
+#include "../bytecode/bytecode_builder.h"
 
 int main(int argc, char* argv[]) {
 
     std::cout << "runtime " << std::endl;
-
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
@@ -20,7 +19,6 @@ int main(int argc, char* argv[]) {
     }
 
     std::printf("Hello SDL\n");
-
     
     SDL_Window* window = SDL_CreateWindow(
         "LangJam SDL", 

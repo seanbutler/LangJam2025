@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
+
 # Add subdirectories for lang and runtime
-add_subdirectory(min)
 add_subdirectory(runtime)
 add_subdirectory(lang)
 

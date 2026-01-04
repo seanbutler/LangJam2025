@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "vm.h"
+#include "opcodes.h"
 
 namespace vm32 {
 

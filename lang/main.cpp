@@ -4,7 +4,8 @@
 
 #include "tokeniser.hpp"
 #include "parser.hpp"
-// #include "ast.hpp"
+#include "diagram_visitor.hpp"
+#include "ast.hpp"
 
 int main(int argc, char** argv) {
 
@@ -27,14 +28,23 @@ int main(int argc, char** argv) {
         ModuleASTNode * ast = nullptr;
         ast = parser.ParseModule();
         
+        ast->print();
+
+
         std::ofstream diagramFile("ast_diagram.gv");
         diagramFile << "digraph G {" <<  std::endl;
+        diagramFile << "graph [rankdir = TB ]" <<  std::endl;
         diagramFile << "node [shape = rectangle];" << std::endl;
         ast->Diagram(diagramFile);
         diagramFile << "}" << std::endl;
         diagramFile.close();
 
-        ast->print();
+        Diagram_Visitor diagramVisitor;
+        diagramVisitor.Visit(ast);
+
+
+
+
     }
 
     return 0;

@@ -1,6 +1,7 @@
 #pragma once
-#include "vm.h"
 #include <vector>
+#include "opcodes.h"
+
 
 namespace vm32 {
 

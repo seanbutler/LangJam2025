@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "visitor.hpp"
+
 // ------------------------------- AST Base Class --------------------------------
 
 static uint32_t global_id=0;
@@ -18,9 +20,13 @@ public:
     )
     : id(global_id++), tag(tag), type(type), value(value), print_comment(comment)
     {
+
     }
 
     virtual ~ASTNode() = default;
+
+
+    virtual void Accept(ASTNodeVisitor* visitor) =0;
 
     void print(int indent = 0) const 
     {
@@ -81,6 +87,11 @@ public:
     {
     }
 
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }
+
     virtual ~ModuleASTNode() override = default;
 };
 
@@ -90,8 +101,13 @@ public:
 class ScopeASTNode : public ASTNode {
 public:
     ScopeASTNode() 
-    : ASTNode( global_id++, "SCP",  "Scope", "Scope", "Scope AST Node" ) 
+    : ASTNode( global_id++, "SCOP",  "Scope", "Scope", "Scope AST Node" ) 
     {
+    }
+
+    virtual void Accept(class ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
     }
 
     virtual ~ScopeASTNode() override = default; 
@@ -105,7 +121,7 @@ public:
 class KeywordStatementASTNode : public ASTNode {
 public:
     KeywordStatementASTNode()
-        : ASTNode( global_id++, "KWD", "KeywordStatement", "KeywordStatement", "Keyword Statement AST Node")
+        : ASTNode( global_id++, "KWRD", "KeywordStatement", "KeywordStatement", "Keyword Statement AST Node")
         {
 
         }
@@ -121,15 +137,17 @@ public:
 class DeclarationASTNode : public ASTNode {
 public:
     DeclarationASTNode()
-        : ASTNode( global_id++, "DEC", "Declaration", "Declaration", "Declaration AST Node" ) 
+        : ASTNode( global_id++, "DECL", "Declaration", "Declaration", "Declaration AST Node" ) 
         {
 
         }
 
-
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }
 
     virtual ~DeclarationASTNode() override = default;
-
 
 };
 
@@ -140,10 +158,15 @@ public:
 class FunctionASTNode : public ASTNode {
 public:
     FunctionASTNode()
-        : ASTNode( global_id++, "FUN", "Function", "Function", "Function AST Node" ) 
+        : ASTNode( global_id++, "FUNC", "Function", "Function", "Function AST Node" ) 
         {
 
         }
+
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }   
 
 
     virtual ~FunctionASTNode() override = default;
@@ -163,6 +186,11 @@ public:
         }
 
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
+
     virtual ~ConditionalASTNode() override = default;
 
 };
@@ -179,6 +207,10 @@ public:
 
         }
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
 
     virtual ~LoopASTNode() override = default;
 
@@ -197,6 +229,11 @@ public:
 
         }
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
+
 
     virtual ~ExitLoopASTNode() override = default;
 
@@ -213,43 +250,33 @@ public:
 
         }
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
 
     virtual ~ReturnASTNode() override = default;
 
 };
 
 
-// ------------------------------- Assignment Statement AST Class --------------------------------
-
-
-class AssignmentStatementASTNode : public ASTNode {
-public:
-    AssignmentStatementASTNode()
-        : ASTNode( global_id++, "ASST", "AssignmentStatement", "AssignmentStatement", "Assignment Statement AST Node" ) 
-        {
-
-        }
-
-
-    virtual ~AssignmentStatementASTNode() override = default;
-
-};
-
-
 // ------------------------------- Assignment AST Class --------------------------------
-
 
 class AssignmentASTNode : public ASTNode {
 public:
     AssignmentASTNode()
-            : ASTNode( global_id++, "ASS", "Assignment", "Assignment", "Assignment AST Node" ) 
+        : ASTNode( global_id++, "ASGN", "Assignment", "Assignment", "Assignment AST Node" ) 
         {
 
         }
 
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }
+
 
     virtual ~AssignmentASTNode() override = default;
-
 };
 
 
@@ -259,10 +286,15 @@ public:
 class ExpressionASTNode : public ASTNode {
 public:
     ExpressionASTNode()
-        : ASTNode( global_id++, "EXP", "Expression", "Expression", "Expression AST Node" ) 
+        : ASTNode( global_id++, "EXPR", "Expression", "Expression", "Expression AST Node" ) 
         {
 
         }
+
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }   
 
 
     virtual ~ExpressionASTNode() override = default;
@@ -280,6 +312,12 @@ public:
 
         }
 
+    virtual void Accept(ASTNodeVisitor* visitor) override
+    {
+        visitor->Visit(this);
+    }
+
+
     virtual ~ValueASTNode() override = default;
 
 
@@ -290,11 +328,15 @@ public:
 class IdentifierASTNode : public ASTNode {
 public:
     IdentifierASTNode(const std::string& name)
-            : ASTNode( global_id++, "ID", "Identifier",  name, "Identifier AST Node" ) 
+            : ASTNode( global_id++, "IDNT", "Identifier",  name, "Identifier AST Node" ) 
         {
 
         }
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
 
     virtual ~IdentifierASTNode() override = default;
 
@@ -313,6 +355,11 @@ public:
 
         }
 
+        virtual void Accept(ASTNodeVisitor* visitor) override
+        {
+            visitor->Visit(this);
+        }
+        
     virtual ~ParameterListASTNode() override = default;
 
 

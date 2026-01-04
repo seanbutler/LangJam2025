@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(runtime)
+
 include(FetchContent)
 
 # FetchContent for SDL2
@@ -19,11 +20,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Only .cpp files are sources, headers are included automatically
 set(SOURCES
-        bytecode_io.cpp
         vm.cpp
         main.cpp
 )
 
 add_executable(runtime ${SOURCES})
-target_include_directories(runtime PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# target_include_directories(runtime PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(runtime PRIVATE ../bytecode/)
 target_link_libraries(runtime PRIVATE SDL2::SDL2 SDL2::SDL2main)
